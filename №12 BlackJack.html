@@ -1,0 +1,94 @@
+<meta charset="utf-8">
+<script>
+	//функция выбора числа из заданного диапазона;
+	function getRandomInt(min, max) {
+		return Math.floor(Math.random() * (max - min + 1) + min);
+	}
+	//функция, присваивающая случайную карту из массива;
+	function getCard() {
+		var cards = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+		return cards [getRandomInt(0, cards.length - 1)];
+	}
+	//функция, подсчитывающая количество баллов у игрока;
+	function getSum(arr) {
+		var sum = 0;
+		for (i = 0; i < arr.length; i++) {
+			var card = arr[i];
+			if (card != 'A') {
+				if (card == 'J' || card == 'Q' || card == 'K') {
+					sum = sum + 10;
+				} else {
+					sum = sum + parseInt(card);
+				}
+			}
+		}
+		for (i = 0; i < arr.length; i++) {
+			var card = arr[i];
+			if (card == 'A') {
+				if (sum > 10) {
+					sum = sum + 1;
+				} else {
+					sum = sum + 11;
+				}
+			}
+		}
+		return sum;
+	}
+	//показать текущий результат №1;
+	function getStatus() {
+		return name + ': ' + player.join(', ') + '. ' + "Текущая сумма карт: " + getSum(player) + '. Карта дилера: ' + dealer.join(', ') + '.'; 
+	}
+	//показать текущий результат №2;
+	function getStatusEnd() {
+		return name + ': ' + player.join(', ') + '. ' + "Текущая сумма карт: " + getSum(player) + '. Дилер: ' + dealer.join(', ') + '. ' + 'Сумма дилера: ' + getSum(dealer) + '.';
+	}
+	//код игры;
+	var name = prompt('Как звать?');
+	var LERA = 'давай';
+
+	while (LERA == 'давай') {
+		var dealer = [getCard()];
+		var player = [getCard(), getCard()];
+		var answer = '';
+
+		alert('Карты на стол! ' + getStatus());
+
+		if (getSum(player) == 21) {
+			alert('Да ладно?! А ведь это победа, черт возьми! Мои поздравления. ' + getStatus());
+		} else {
+			do {
+				answer = prompt('У тебя: ' + player.join(', ') + '. Сумма: ' + getSum(player) + '. Хочешь взять еще карту? (да/нет)');
+				if (answer == 'да') {
+					player.push(getCard());
+					alert (getStatus());
+					if (getSum(player) > 21) {
+						alert('Перебор! ' + getStatus());
+						break;
+					} else if (getSum(player) == 21) {
+						alert('Это всего лишь везение: ' + getStatus());
+						break;
+					}
+				} else {
+					while (getSum(dealer) < 17) {
+						dealer.push(getCard());
+						alert('Дилер взял карту. У него на руках: ' + dealer.join(', ') + '. Сумма карт: ' + getSum(dealer));
+					} 
+					var sumD = (getSum(dealer));
+					var sumP = (getSum(player));
+					if (sumD > 21) {
+						alert('Дилер перебрал ;) Твоя победа. ' + getStatusEnd());
+					} else if (sumD > sumP) {
+						alert('Дилер победил :) ' + getStatusEnd());
+					} else if (sumD == sumP) {
+						alert('Боже, что за игра: ничья. ' + getStatusEnd());
+					} else {
+						alert('Ну, поздравляю, уделал(а) меня. ' + getStatusEnd());
+					}
+				} 
+			} while (answer == 'да');
+		}
+		LERA = prompt(name + ', давай еще разок? (давай/нет)');
+		}
+		alert('Ну и ладно, пока!'); 
+	
+</script>
